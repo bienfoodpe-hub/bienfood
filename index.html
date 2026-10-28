@@ -4,19 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     
-    <!-- SEO Master Tags para Google Search Console -->
-    <title>BIEN FOOD - Tienda Saludable & Orgánica VIP en Perú</title>
-    <meta name="description" content="Compra superalimentos, frutos secos, harinas, tés y suplementos 100% orgánicos y naturales en Perú. Envíos a todo el país con Bien Food.">
-    <meta name="keywords" content="bien food, bienfood, bienfood.pe, alimentos saludables peru, frutos secos, superalimentos, comida organica, suplementos naturales, trujillo">
+    <!-- SEO Master Tags -->
+    <title>BienFood - Tienda Saludable & Orgánica VIP en Perú</title>
+    <meta name="description" content="Compra superalimentos, frutos secos, harinas, tés y suplementos 100% orgánicos en Perú. Envíos a todo el país con BienFood.">
+    <meta name="keywords" content="bienfood, bien food, bienfood.pe, frutos secos, superalimentos, comida organica, suplementos naturales, trujillo, peru">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://bienfood.pe/" />
+
+    <!-- Favicon (Icono de la pestaña del navegador) -->
+    <link rel="icon" type="image/png" href="https://bienfood.pe/logo.png">
+    <link rel="apple-touch-icon" href="https://bienfood.pe/logo.png">
 
     <!-- Open Graph / WhatsApp / Facebook Preview -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://bienfood.pe/">
-    <meta property="og:title" content="BIEN FOOD - Tienda Saludable & Orgánica VIP">
+    <meta property="og:title" content="BienFood - Tienda Saludable & Orgánica VIP">
     <meta property="og:description" content="Superalimentos, frutos secos y productos orgánicos de máxima calidad. Realiza tu pedido en línea con envío a domicilio.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:image" content="https://bienfood.pe/logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Preview -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BienFood - Tienda Saludable & Orgánica VIP">
+    <meta name="twitter:description" content="Superalimentos, frutos secos y productos orgánicos de máxima calidad.">
+    <meta name="twitter:image" content="https://bienfood.pe/logo.png">
+
+    <!-- Esquema Estructurado JSON-LD para Google (LocalBusiness) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "GroceryStore",
+      "name": "BienFood",
+      "image": "https://bienfood.pe/logo.png",
+      "@id": "https://bienfood.pe/#store",
+      "url": "https://bienfood.pe/",
+      "telephone": "+51999901987",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Trujillo",
+        "addressRegion": "La Libertad",
+        "addressCountry": "PE"
+      }
+    }
+    </script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,23 +59,29 @@
             justify-content: center; align-items: center; z-index: 10;
             transition: opacity 0.4s ease-out;
         }
+        #loader img {
+            width: 140px; height: auto; margin-bottom: 20px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
         .spinner {
-            width: 48px; height: 48px; border: 4px solid #e2e8f0;
+            width: 40px; height: 40px; border: 4px solid #e2e8f0;
             border-top: 4px solid #16a34a; border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loader-text { margin-top: 16px; color: #15803d; font-weight: 600; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .loader-text { margin-top: 14px; color: #15803d; font-weight: 600; font-size: 15px; }
         iframe { width: 100%; height: 100%; border: none; display: block; }
     </style>
 </head>
 <body>
     <div id="loader">
+        <img src="logo.png" alt="BienFood Logo">
         <div class="spinner"></div>
-        <div class="loader-text">Cargando BIEN FOOD...</div>
+        <div class="loader-text">Cargando BienFood...</div>
     </div>
 
-    <!-- Aplicación Web vinculada directamente a la vista de cliente -->
+    <!-- Aplicación Web conectada a vista cliente -->
     <iframe 
         id="mainApp" 
         src="https://script.google.com/macros/s/AKfycbx9m2x-w5tkvmDdwTJEuADdTdKLiDgNlYCqiC1vEZgYoarChfrJpIRWB-voLk5yWPSN/exec?view=client" 
