@@ -1,102 +1,436 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-PE">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    
-    <!-- SEO Master Tags -->
-    <title>BienFood - Tienda Saludable & Orgánica VIP en Perú</title>
-    <meta name="description" content="Compra superalimentos, frutos secos, harinas, tés y suplementos 100% orgánicos en Perú. Envíos a todo el país con BienFood.">
-    <meta name="keywords" content="bienfood, bien food, bienfood.pe, frutos secos, superalimentos, comida organica, suplementos naturales, trujillo, peru">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://bienfood.pe/" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    <!-- Favicon (Icono de la pestaña del navegador) -->
-    <link rel="icon" type="image/png" href="https://bienfood.pe/logo.png">
-    <link rel="apple-touch-icon" href="https://bienfood.pe/logo.png">
+<!-- SEO principal -->
+<title>BienFood: productos orgánicos, sin gluten y veganos en Perú</title>
+<meta name="description" content="Productos orgánicos, sin azúcar, sin gluten y veganos a precios cómodos. Superalimentos, frutos secos, harinas y tés desde Trujillo. Envíos a todo el Perú.">
+<meta name="keywords" content="bienfood, productos saludables, productos orgánicos Perú, productos sin gluten, productos veganos, sin azúcar, bajos en azúcar, superalimentos, frutos secos, harinas sin gluten, tés e infusiones, suplementos naturales, tienda saludable Trujillo">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#1F6B3A">
+<link rel="canonical" href="https://bienfood.pe/">
 
-    <!-- Open Graph / WhatsApp / Facebook Preview -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://bienfood.pe/">
-    <meta property="og:title" content="BienFood - Tienda Saludable & Orgánica VIP">
-    <meta property="og:description" content="Superalimentos, frutos secos y productos orgánicos de máxima calidad. Realiza tu pedido en línea con envío a domicilio.">
-    <meta property="og:image" content="https://bienfood.pe/logo.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
+<!-- Iconos -->
+<link rel="icon" type="image/png" href="https://bienfood.pe/favicon.png">
+<link rel="apple-touch-icon" href="https://bienfood.pe/favicon.png">
 
-    <!-- Twitter Preview -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="BienFood - Tienda Saludable & Orgánica VIP">
-    <meta name="twitter:description" content="Superalimentos, frutos secos y productos orgánicos de máxima calidad.">
-    <meta name="twitter:image" content="https://bienfood.pe/logo.png">
+<!-- Open Graph / WhatsApp / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_PE">
+<meta property="og:site_name" content="BienFood">
+<meta property="og:url" content="https://bienfood.pe/">
+<meta property="og:title" content="BienFood: productos orgánicos, sin gluten y veganos">
+<meta property="og:description" content="Tienda en línea con productos orgánicos, sin azúcar, sin gluten y veganos a precios cómodos. Envíos a todo el Perú.">
+<meta property="og:image" content="https://bienfood.pe/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Logo de BienFood, tienda de productos saludables en Perú">
 
-    <!-- Esquema Estructurado JSON-LD para Google (LocalBusiness) -->
-    <script type="application/ld+json">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BienFood: productos orgánicos, sin gluten y veganos">
+<meta name="twitter:description" content="Productos saludables a precios cómodos. Orgánicos, sin azúcar, sin gluten y veganos.">
+<meta name="twitter:image" content="https://bienfood.pe/og-image.png">
+
+<!-- Datos estructurados: tienda -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "GroceryStore",
+  "@id": "https://bienfood.pe/#store",
+  "name": "BienFood",
+  "url": "https://bienfood.pe/",
+  "logo": "https://bienfood.pe/logo.png",
+  "image": "https://bienfood.pe/og-image.png",
+  "description": "Tienda en línea de productos saludables a precios cómodos: orgánicos, bajos en azúcar o sin azúcar, sin gluten y veganos. Superalimentos, frutos secos, harinas, tés y suplementos naturales.",
+  "telephone": "+51999901987",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Trujillo",
+    "addressRegion": "La Libertad",
+    "addressCountry": "PE"
+  },
+  "areaServed": { "@type": "Country", "name": "Perú" },
+  "knowsAbout": ["productos orgánicos", "productos sin gluten", "productos veganos", "superalimentos", "frutos secos", "harinas", "tés e infusiones"]
+}
+</script>
+
+<!-- Datos estructurados: preguntas frecuentes (coinciden con el texto visible) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
     {
-      "@context": "https://schema.org",
-      "@type": "GroceryStore",
-      "name": "BienFood",
-      "image": "https://bienfood.pe/logo.png",
-      "@id": "https://bienfood.pe/#store",
-      "url": "https://bienfood.pe/",
-      "telephone": "+51999901987",
-      "priceRange": "$$",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Trujillo",
-        "addressRegion": "La Libertad",
-        "addressCountry": "PE"
-      }
+      "@type": "Question",
+      "name": "¿Todos los productos de BienFood son orgánicos?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sí. BienFood vende únicamente productos saludables de origen orgánico: superalimentos, frutos secos, harinas, tés y suplementos naturales." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Tienen productos sin gluten?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sí. Todo el catálogo es sin gluten, incluidas las harinas, para quienes evitan el gluten en su alimentación." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Los productos son veganos?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sí. Los productos de BienFood son veganos y no contienen ingredientes de origen animal." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hay productos sin azúcar o bajos en azúcar?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sí. Los productos son sin azúcar o bajos en azúcar. Puedes revisar la información de cada producto en la tienda." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hacen envíos a todo el Perú?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sí. Hacemos envíos a todo el país desde Trujillo, La Libertad. Realizas tu pedido en línea y lo recibes a domicilio." }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo hago un pedido?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Entra a la tienda en bienfood.pe, elige tus productos y completa tu pedido en línea. Si tienes dudas, escríbenos por WhatsApp." }
     }
-    </script>
+  ]
+}
+</script>
 
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { width: 100%; height: 100%; overflow: hidden; background-color: #f4f8f5; font-family: sans-serif; }
-        #loader {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffffff; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 10;
-            transition: opacity 0.4s ease-out;
-        }
-        #loader img {
-            width: 140px; height: auto; margin-bottom: 20px;
-            animation: pulse 1.5s infinite ease-in-out;
-        }
-        .spinner {
-            width: 40px; height: 40px; border: 4px solid #e2e8f0;
-            border-top: 4px solid #16a34a; border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .loader-text { margin-top: 14px; color: #15803d; font-weight: 600; font-size: 15px; }
-        iframe { width: 100%; height: 100%; border: none; display: block; }
-    </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --hoja: #1F6B3A;
+    --hoja-oscura: #14482A;
+    --brote: #8CC63F;
+    --zanahoria: #F26A1B;
+    --tinta: #17301F;
+    --rocio: #F3F8EE;
+    --papel: #FFFFFF;
+    --linea: #CFE0C4;
+    --head-h: 68px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: var(--head-h); }
+  body {
+    font-family: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--tinta);
+    background: var(--rocio);
+    line-height: 1.6;
+    font-size: 17px;
+  }
+  h1, h2, h3 {
+    font-family: "Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  a { color: var(--hoja); }
+  :focus-visible { outline: 3px solid var(--zanahoria); outline-offset: 3px; border-radius: 4px; }
+  .wrap { width: min(1120px, 100% - 40px); margin-inline: auto; }
+
+  .skip { position: absolute; left: -9999px; top: 8px; background: var(--hoja); color: #fff; padding: 10px 16px; border-radius: 8px; z-index: 100; }
+  .skip:focus { left: 12px; }
+
+  /* Encabezado */
+  header.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--linea);
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  header.top .wrap { height: var(--head-h); display: flex; align-items: center; gap: 24px; }
+  .brand img { height: 40px; width: auto; display: block; }
+  nav.main { margin-left: auto; display: flex; gap: 22px; }
+  nav.main a { text-decoration: none; color: var(--tinta); font-weight: 500; font-size: 15px; }
+  nav.main a:hover { color: var(--hoja); text-decoration: underline; text-underline-offset: 4px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 12px 22px; border-radius: 999px; font-weight: 600; font-size: 16px;
+    text-decoration: none; border: 2px solid transparent; cursor: pointer;
+    transition: background-color .15s, color .15s, border-color .15s;
+  }
+  .btn-primario { background: var(--zanahoria); color: #fff; }
+  .btn-primario:hover { background: #D85A10; }
+  .btn-borde { border-color: var(--hoja); color: var(--hoja); background: transparent; }
+  .btn-borde:hover { background: var(--hoja); color: #fff; }
+  header.top .btn { padding: 9px 18px; font-size: 15px; }
+
+  /* Portada */
+  .portada { padding: 56px 0 64px; }
+  .portada .wrap { display: grid; grid-template-columns: 1.25fr 1fr; gap: 56px; align-items: center; }
+  .portada h1 { font-size: clamp(2.2rem, 5vw, 3.7rem); font-weight: 800; color: var(--hoja-oscura); }
+  .portada p.sub { margin-top: 20px; font-size: 1.15rem; max-width: 56ch; }
+  .portada .acciones { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px; }
+
+  /* Etiqueta tipo información nutricional */
+  .etiqueta {
+    background: var(--papel);
+    border: 3px solid var(--tinta);
+    border-radius: 6px;
+    padding: 18px 20px 8px;
+    max-width: 400px;
+    justify-self: end;
+    width: 100%;
+  }
+  .etiqueta h2 { font-size: 1.9rem; font-weight: 800; border-bottom: 10px solid var(--tinta); padding-bottom: 6px; }
+  .etiqueta p.nota { font-size: .95rem; padding: 8px 0; border-bottom: 5px solid var(--tinta); }
+  .etiqueta ul { list-style: none; }
+  .etiqueta li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--tinta); font-weight: 600; }
+  .etiqueta li:last-child { border-bottom: 0; }
+  .etiqueta li span:last-child { color: var(--hoja); font-weight: 800; }
+
+  /* Tienda */
+  .tienda { background: var(--papel); border-block: 1px solid var(--linea); padding: 28px 0 36px; }
+  .tienda h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--hoja-oscura); }
+  .tienda p.lead { margin: 6px 0 18px; max-width: 70ch; }
+  .marco {
+    position: relative; width: 100%;
+    height: calc(100vh - var(--head-h) - 40px); min-height: 640px;
+    border: 1px solid var(--linea); border-radius: 14px; overflow: hidden; background: #fff;
+  }
+  .marco iframe { width: 100%; height: 100%; border: 0; display: block; }
+  #loader {
+    position: absolute; inset: 0; background: #fff; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    transition: opacity .4s ease-out;
+  }
+  #loader img { width: 170px; height: auto; }
+  .spinner { width: 38px; height: 38px; border: 4px solid #e2e8f0; border-top-color: var(--hoja); border-radius: 50%; animation: giro .8s linear infinite; }
+  #loader p { color: var(--hoja); font-weight: 600; font-size: 15px; }
+  @keyframes giro { to { transform: rotate(360deg); } }
+
+  /* Secciones de contenido */
+  section.bloque { padding: 72px 0; }
+  section.bloque > .wrap > h2 { font-size: clamp(1.7rem, 3.4vw, 2.5rem); color: var(--hoja-oscura); max-width: 22ch; }
+  section.bloque > .wrap > p.intro { margin-top: 14px; max-width: 64ch; }
+
+  /* Catálogo como índice de filas */
+  .indice { margin-top: 32px; border-top: 3px solid var(--tinta); }
+  .fila { display: grid; grid-template-columns: 1fr 1.6fr; gap: 28px; padding: 22px 0; border-bottom: 1px solid var(--linea); }
+  .fila h3 { font-size: 1.5rem; font-weight: 800; color: var(--hoja); }
+  .fila p { max-width: 62ch; }
+
+  /* Formas de comer */
+  .dietas { background: var(--hoja-oscura); color: #F3F8EE; }
+  .dietas > .wrap > h2 { color: #fff; }
+  .dietas-grid { margin-top: 36px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
+  .dietas-grid h3 { font-size: 1.35rem; font-weight: 800; color: var(--brote); margin-bottom: 8px; }
+  .dietas-grid p { max-width: 38ch; }
+
+  /* Preguntas */
+  .faq { margin-top: 28px; border-top: 3px solid var(--tinta); max-width: 820px; }
+  .faq details { border-bottom: 1px solid var(--linea); padding: 4px 0; }
+  .faq summary {
+    cursor: pointer; list-style: none; padding: 16px 36px 16px 0; position: relative;
+    font-family: "Bricolage Grotesque", "Figtree", sans-serif; font-weight: 600; font-size: 1.18rem;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; position: absolute; right: 4px; top: 10px; font-size: 1.8rem; color: var(--zanahoria); line-height: 1; }
+  .faq details[open] summary::after { content: "\2212"; }
+  .faq details p { padding: 0 0 18px; max-width: 64ch; }
+
+  /* Contacto y pie */
+  .cierre { background: var(--papel); border-top: 1px solid var(--linea); }
+  .cierre .wrap { padding: 48px 0 28px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; align-items: center; }
+  .cierre h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); color: var(--hoja-oscura); }
+  .cierre p { margin-top: 8px; }
+  .cierre .acciones { display: flex; flex-wrap: wrap; gap: 12px; justify-self: end; }
+  .legal { border-top: 1px solid var(--linea); padding: 18px 0 calc(22px + env(safe-area-inset-bottom, 0px)); font-size: 14px; color: #3d5a45; }
+
+  @media (max-width: 860px) {
+    .portada .wrap, .cierre .wrap { grid-template-columns: 1fr; }
+    .etiqueta { justify-self: start; }
+    .cierre .acciones { justify-self: start; }
+    .fila { grid-template-columns: 1fr; gap: 6px; }
+    .dietas-grid { grid-template-columns: 1fr; gap: 28px; }
+    nav.main { display: none; }
+    header.top .btn { margin-left: auto; }
+    .marco { min-height: 560px; height: 80vh; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .spinner { animation: none; }
+    #loader { transition: none; }
+  }
+</style>
 </head>
 <body>
-    <div id="loader">
-        <img src="logo.png" alt="BienFood Logo">
-        <div class="spinner"></div>
-        <div class="loader-text">Cargando BienFood...</div>
+<a class="skip" href="#tienda">Ir a la tienda</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="BienFood, inicio"><img src="logo.png" alt="BienFood" width="120" height="40"></a>
+    <nav class="main" aria-label="Principal">
+      <a href="#tienda">Tienda</a>
+      <a href="#categorias">Categorías</a>
+      <a href="#preguntas">Preguntas</a>
+    </nav>
+    <a class="btn btn-primario" href="#tienda">Ver tienda</a>
+  </div>
+</header>
+
+<main>
+  <section class="portada">
+    <div class="wrap">
+      <div>
+        <h1>Productos saludables, orgánicos y a precio cómodo</h1>
+        <p class="sub">Superalimentos, frutos secos, harinas, tés y suplementos naturales. Todo orgánico, sin azúcar o bajo en azúcar, sin gluten y vegano. Compra en línea desde Trujillo y recibe en todo el Perú.</p>
+        <div class="acciones">
+          <a class="btn btn-primario" href="#tienda">Comprar ahora</a>
+          <a class="btn btn-borde" href="https://wa.me/51999901987?text=Hola%20BienFood%2C%20quiero%20hacer%20una%20consulta" rel="noopener">Escribir por WhatsApp</a>
+        </div>
+      </div>
+
+      <aside class="etiqueta" aria-label="Lo que cumple cada producto de BienFood">
+        <h2>En cada producto</h2>
+        <p class="nota">Lo que encuentras en todo el catálogo de BienFood.</p>
+        <ul>
+          <li><span>Origen</span><span>Orgánico</span></li>
+          <li><span>Azúcar</span><span>Sin azúcar o baja</span></li>
+          <li><span>Gluten</span><span>Sin gluten</span></li>
+          <li><span>Ingredientes</span><span>100% vegano</span></li>
+          <li><span>Precio</span><span>Cómodo</span></li>
+        </ul>
+      </aside>
     </div>
+  </section>
 
-    <!-- Aplicación Web conectada a vista cliente -->
-    <iframe 
-        id="mainApp" 
-        src="https://script.google.com/macros/s/AKfycbx9m2x-w5tkvmDdwTJEuADdTdKLiDgNlYCqiC1vEZgYoarChfrJpIRWB-voLk5yWPSN/exec?view=client" 
-        allow="geolocation; microphone; camera; payment"
-        onload="hideLoader()">
-    </iframe>
+  <section class="tienda" id="tienda" aria-labelledby="t-tienda">
+    <div class="wrap">
+      <h2 id="t-tienda">Tienda en línea de productos orgánicos</h2>
+      <p class="lead">Elige tus productos saludables y haz tu pedido con envío a domicilio.</p>
+      <div class="marco">
+        <div id="loader">
+          <img src="logo.png" alt="BienFood">
+          <div class="spinner" aria-hidden="true"></div>
+          <p>Cargando BienFood...</p>
+        </div>
+        <iframe
+          id="mainApp"
+          title="Tienda en línea BienFood"
+          src="https://script.google.com/macros/s/AKfycbx9m2x-w5tkvmDdwTJEuADdTdKLiDgNlYCqiC1vEZgYoarChfrJpIRWB-voLk5yWPSN/exec?view=client"
+          allow="geolocation; microphone; camera; payment"
+          loading="eager"
+          onload="hideLoader()">
+        </iframe>
+      </div>
+      <noscript><p>Activa JavaScript para ver la tienda o escríbenos por <a href="https://wa.me/51999901987">WhatsApp</a>.</p></noscript>
+    </div>
+  </section>
 
-    <script>
-        function hideLoader() {
-            var loader = document.getElementById('loader');
-            if (loader) {
-                loader.style.opacity = '0';
-                setTimeout(function() { loader.style.display = 'none'; }, 400);
-            }
-        }
-    </script>
+  <section class="bloque" id="categorias" aria-labelledby="t-cat">
+    <div class="wrap">
+      <h2 id="t-cat">Qué vendemos en BienFood</h2>
+      <p class="intro">Una tienda saludable en Perú con cinco categorías de productos orgánicos, veganos y sin gluten, pensadas para comer mejor sin gastar de más.</p>
+
+      <div class="indice">
+        <div class="fila">
+          <h3>Superalimentos</h3>
+          <p>Superalimentos orgánicos para tu día a día, sin azúcar añadida y aptos para dietas veganas y sin gluten. Ideales para batidos, desayunos y snacks.</p>
+        </div>
+        <div class="fila">
+          <h3>Frutos secos</h3>
+          <p>Frutos secos orgánicos, naturales y sin azúcar añadida. Una opción práctica y vegana para llevar contigo o sumar a tus recetas.</p>
+        </div>
+        <div class="fila">
+          <h3>Harinas sin gluten</h3>
+          <p>Harinas orgánicas sin gluten para panes, panqueques y repostería saludable. Veganas y con bajo contenido de azúcar.</p>
+        </div>
+        <div class="fila">
+          <h3>Tés e infusiones</h3>
+          <p>Tés e infusiones orgánicas sin azúcar, para acompañar tus momentos de pausa. Veganas y sin gluten.</p>
+        </div>
+        <div class="fila">
+          <h3>Suplementos naturales</h3>
+          <p>Suplementos naturales de origen orgánico y vegano, con precios cómodos y envío a todo el Perú.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque dietas" aria-labelledby="t-dietas">
+    <div class="wrap">
+      <h2 id="t-dietas">Para la forma en que tú comes</h2>
+      <div class="dietas-grid">
+        <div>
+          <h3>Sin gluten</h3>
+          <p>Todo nuestro catálogo es sin gluten. Si evitas el gluten, encuentras harinas, snacks y más productos sin buscar uno por uno.</p>
+        </div>
+        <div>
+          <h3>Veganos</h3>
+          <p>Productos 100% veganos, sin ingredientes de origen animal. Alimentación basada en plantas, simple y accesible.</p>
+        </div>
+        <div>
+          <h3>Sin azúcar o bajos en azúcar</h3>
+          <p>Productos sin azúcar o con bajo contenido de azúcar, para cuidar lo que comes sin renunciar al sabor.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque" id="preguntas" aria-labelledby="t-faq">
+    <div class="wrap">
+      <h2 id="t-faq">Preguntas frecuentes</h2>
+      <div class="faq">
+        <details>
+          <summary>¿Todos los productos de BienFood son orgánicos?</summary>
+          <p>Sí. BienFood vende únicamente productos saludables de origen orgánico: superalimentos, frutos secos, harinas, tés y suplementos naturales.</p>
+        </details>
+        <details>
+          <summary>¿Tienen productos sin gluten?</summary>
+          <p>Sí. Todo el catálogo es sin gluten, incluidas las harinas, para quienes evitan el gluten en su alimentación.</p>
+        </details>
+        <details>
+          <summary>¿Los productos son veganos?</summary>
+          <p>Sí. Los productos de BienFood son veganos y no contienen ingredientes de origen animal.</p>
+        </details>
+        <details>
+          <summary>¿Hay productos sin azúcar o bajos en azúcar?</summary>
+          <p>Sí. Los productos son sin azúcar o bajos en azúcar. Puedes revisar la información de cada producto en la tienda.</p>
+        </details>
+        <details>
+          <summary>¿Hacen envíos a todo el Perú?</summary>
+          <p>Sí. Hacemos envíos a todo el país desde Trujillo, La Libertad. Realizas tu pedido en línea y lo recibes a domicilio.</p>
+        </details>
+        <details>
+          <summary>¿Cómo hago un pedido?</summary>
+          <p>Entra a la tienda en bienfood.pe, elige tus productos y completa tu pedido en línea. Si tienes dudas, escríbenos por WhatsApp.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="cierre">
+  <div class="wrap">
+    <div>
+      <h2>¿Dudas sobre un producto?</h2>
+      <p>Escríbenos y te ayudamos a elegir. Atendemos desde Trujillo, La Libertad, con envíos a todo el Perú.</p>
+    </div>
+    <div class="acciones">
+      <a class="btn btn-primario" href="https://wa.me/51999901987?text=Hola%20BienFood%2C%20quiero%20hacer%20una%20consulta" rel="noopener">Escribir por WhatsApp</a>
+      <a class="btn btn-borde" href="#tienda">Ir a la tienda</a>
+    </div>
+  </div>
+  <div class="wrap legal">© 2026 BienFood. Productos orgánicos, sin gluten, veganos y sin azúcar o bajos en azúcar en Perú.</div>
+</footer>
+
+<script>
+  function hideLoader() {
+    var loader = document.getElementById('loader');
+    if (loader && loader.style.display !== 'none') {
+      loader.style.opacity = '0';
+      setTimeout(function () { loader.style.display = 'none'; }, 400);
+    }
+  }
+  // Por si el iframe tarda o no dispara onload
+  setTimeout(hideLoader, 10000);
+</script>
 </body>
 </html>
