@@ -12,7 +12,118 @@
       gtag('config', 'G-CFNRCYHJ6M');
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <title id="pageTitle">BIEN FOOD - Tienda Saludable & Orgánica VIP</title>
+    <title id="pageTitle">BienFood - Tienda Saludable y Orgánica en Perú</title>
+
+    <!-- SEO Master Tags -->
+    <meta name="description" content="Compra superalimentos, frutos secos, cacao, chocolate, snacks saludables, harinas, tés y suplementos 100% orgánicos en Perú. Envíos a todo el país con BienFood.">
+    <meta name="keywords" content="bienfood, bien food, bienfood.pe, frutos secos, superalimentos, comida organica, suplementos naturales, trujillo, La libertad, Victor larco, Victor Larco Herrera, peru">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://bienfood.pe/" />
+
+    <!-- Favicon (Icono de la pestaña y de Google) -->
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="BienFood" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Open Graph / WhatsApp / Facebook Preview -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bienfood.pe/">
+    <meta property="og:site_name" content="BienFood">
+    <meta property="og:title" content="BienFood - Tienda Saludable, Orgánica, Natural">
+    <meta property="og:description" content="Superalimentos, frutos secos y productos orgánicos de máxima calidad. Realiza tu pedido en línea con envío a domicilio.">
+    <meta property="og:image" content="https://bienfood.pe/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Preview -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BienFood - Tienda Saludable, Orgánica, Natural">
+    <meta name="twitter:description" content="Superalimentos, frutos secos y productos orgánicos de máxima calidad.">
+    <meta name="twitter:image" content="https://bienfood.pe/og-image.png">
+
+    <!-- Esquema Estructurado JSON-LD para Google (LocalBusiness) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "GroceryStore",
+      "name": "BienFood",
+      "image": "https://bienfood.pe/og-image.png",
+      "logo": "https://bienfood.pe/favicon-96x96.png",
+      "@id": "https://bienfood.pe/#store",
+      "url": "https://bienfood.pe/",
+      "telephone": "+51999901987",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Trujillo",
+        "addressRegion": "La Libertad",
+        "addressCountry": "PE"
+      }
+    }
+    </script>
+
+
+    <!-- ===== PUENTE CON APPS SCRIPT (reemplaza google.script.run fuera del iframe) =====
+         URL de tu implementación de Apps Script. -->
+    <script>
+    (function () {
+        if (window.google && window.google.script && window.google.script.run) return; // dentro de Apps Script: no hace falta
+        var API_URL = 'https://script.google.com/macros/s/AKfycbxxSf7UHD6_uCbQwpA4575Q7jwaJ2gdowRQK4bKEPdlZhTgFwR0BGnhrs3oLKOdZA8D/exec';
+        var PUBLIC_GET = { loadStoreData: 1, loadFestiveCampaignConfig: 1 };
+        var FNS = ['loadStoreData', 'loadFestiveCampaignConfig', 'saveStoreData', 'verifyAdminPin', 'changeAdminPin',
+                   'uploadImage', 'uploadDocument', 'uploadVideo', 'startVideoUpload', 'uploadVideoChunk',
+                   'getReelVideoForPlayback', 'getStoreDataForExport', 'importProductsFromRows'];
+
+        function call(name, args, ok, fail) {
+            var req;
+            if (API_URL.indexOf('PEGAR_AQUI') === 0) {
+                req = Promise.reject(new Error('Falta configurar la URL de Apps Script (API_URL) en index.html.'));
+            } else if (PUBLIC_GET[name]) {
+                req = fetch(API_URL + '?fn=' + encodeURIComponent(name) + '&_=' + Date.now(), { method: 'GET' });
+            } else {
+                req = fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ fn: name, args: args })
+                });
+            }
+            Promise.resolve(req)
+                .then(function (r) { return r.text(); })
+                .then(function (t) {
+                    var j;
+                    try { j = JSON.parse(t); } catch (e) { throw new Error('Respuesta inválida del servidor.'); }
+                    if (!j || !j.ok) throw new Error((j && j.error) || 'Error del servidor.');
+                    return j.result;
+                })
+                .then(function (res) {
+                    try { if (ok) ok(res); } catch (e) { console.error(e); }
+                }, function (err) {
+                    var e = err instanceof Error ? err : new Error(String(err));
+                    if (fail) { try { fail(e); } catch (e2) { console.error(e2); } }
+                    else console.error(e);
+                });
+        }
+
+        function runner(ok, fail) {
+            var r = {
+                withSuccessHandler: function (f) { return runner(f, fail); },
+                withFailureHandler: function (f) { return runner(ok, f); },
+                withUserObject: function () { return r; }
+            };
+            FNS.forEach(function (name) {
+                r[name] = function () { call(name, Array.prototype.slice.call(arguments), ok, fail); };
+            });
+            return r;
+        }
+
+        window.google = window.google || {};
+        window.google.script = window.google.script || {};
+        window.google.script.run = runner(null, null);
+    })();
+    </script>
 
     <!-- DIAGNÓSTICO TEMPORAL: solo aparece si el script principal tiene un error de sintaxis (pantalla blanca).
          Compara el script recibido con el esperado y muestra la primera zona distinta. Se puede borrar después. -->
@@ -7287,7 +7398,16 @@ function setAdminSaveStatus(state) {
 
 function applyClientMode() {
     try {
-        if (!(window.google && google.script && google.script.url && google.script.url.getLocation)) { return; }
+        if (!(window.google && google.script && google.script.url && google.script.url.getLocation)) {
+            // Tienda en bienfood.pe (sin iframe): el panel admin solo se muestra con ?view=admin
+            var qs = new URLSearchParams(window.location.search);
+            if (String(qs.get('view') || '').trim().toLowerCase() === 'admin') { return; }
+            ['adminBtnToggle', 'adminDrawer', 'pinModal'].forEach(function(id) {
+                var element = document.getElementById(id);
+                if (element) { element.remove(); }
+            });
+            return;
+        }
         google.script.url.getLocation(function(location) {
             var view = location && location.parameter ? location.parameter.view : undefined;
             if (view === undefined && location && location.parameters && location.parameters.view) {
