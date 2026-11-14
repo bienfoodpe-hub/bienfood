@@ -1,0 +1,4 @@
+Contact: https://wa.me/51920787747
+Expires: 2027-11-14T23:59:00.000Z
+Preferred-Languages: es, en
+Canonical: https://bienfood.pe/.well-known/security.txt
