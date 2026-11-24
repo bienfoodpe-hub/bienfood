@@ -72,10 +72,11 @@
     (function () {
         if (window.google && window.google.script && window.google.script.run) return; // dentro de Apps Script: no hace falta
         var API_URL = 'https://script.google.com/macros/s/AKfycbx8wWPpHC6QpglDe16h4FMICl2Zegoeq3Icdv1MuWzOgGBz-7y0vOYiCbH14F2_N3fr/exec';
-        var PUBLIC_GET = { loadStoreData: 1, loadFestiveCampaignConfig: 1 };
+        var PUBLIC_GET = { loadStoreData: 1, loadFestiveCampaignConfig: 1, getPromoStatus: 1 };
         var FNS = ['loadStoreData', 'loadFestiveCampaignConfig', 'saveStoreData', 'verifyAdminPin', 'changeAdminPin',
                    'uploadImage', 'uploadDocument', 'uploadVideo', 'startVideoUpload', 'uploadVideoChunk',
-                   'getReelVideoForPlayback', 'getStoreDataForExport', 'importProductsFromRows'];
+                   'getReelVideoForPlayback', 'getStoreDataForExport', 'importProductsFromRows',
+                   'getPromoStatus', 'savePromoLead', 'validatePromoCode', 'registerPromoOrder'];
 
         function call(name, args, ok, fail) {
             var req;
@@ -3680,6 +3681,109 @@ body.catalog-mode #catalogBackBar { display: flex; }
                         <button onclick="savePopupConfig()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition-all">
                             Guardar Pop-up
                         </button>
+
+                        <!-- ADMIN: Pop-up de código único -->
+                        <div id="promoAdminBlock" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3 mt-6">
+                            <h3 class="text-xs font-extrabold text-[#064e3b] uppercase tracking-wider">Pop-up de código único (promoción)</h3>
+                            <p class="text-[11px] text-slate-500">La imagen del lado izquierdo se sube aquí. El lado derecho se edita con los campos de abajo. Los cambios se ven en la vista previa al momento.</p>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1">Imagen del lado izquierdo</label>
+                                <input type="file" accept="image/jpeg,image/png,image/gif,image/webp" onchange="promoAdminUpload_(event)" class="text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-100 file:text-emerald-800 hover:file:bg-emerald-200">
+                                <img id="pa_imgPreview" alt="" class="mt-2 w-full max-h-40 object-cover rounded-xl" style="display:none;">
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Etiqueta superior (ej. BLACK FRIDAY)</label>
+                                    <input type="text" id="pa_tag" oninput="promoAdminLive_()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Título (vacío = % OFF automático)</label>
+                                    <input type="text" id="pa_title" oninput="promoAdminLive_()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Subtítulo</label>
+                                    <input type="text" id="pa_subtitle" oninput="promoAdminLive_()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Contexto (texto debajo del subtítulo)</label>
+                                    <textarea id="pa_context" rows="2" oninput="promoAdminLive_()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Texto del botón de acción</label>
+                                    <input type="text" id="pa_btnLabel" oninput="promoAdminLive_()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Texto guía del cuadro de nombre</label>
+                                    <input type="text" id="pa_phName" oninput="promoAdminLive_()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Texto guía del cuadro de WhatsApp</label>
+                                    <input type="text" id="pa_phWa" oninput="promoAdminLive_()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Texto guía del cuadro de correo</label>
+                                    <input type="text" id="pa_phEmail" oninput="promoAdminLive_()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Condiciones (texto de abajo)</label>
+                                    <textarea id="pa_legal" rows="2" oninput="promoAdminLive_()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Mensaje al obtener el código</label>
+                                    <textarea id="pa_successText" rows="2" oninput="promoAdminLive_()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs"></textarea>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Color de fondo (lado derecho)</label>
+                                    <input type="color" id="pa_bgColor" oninput="promoAdminLive_()" class="w-full h-9 rounded-lg cursor-pointer border border-slate-300 p-0.5">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Color de la etiqueta</label>
+                                    <input type="color" id="pa_tagColor" oninput="promoAdminLive_()" class="w-full h-9 rounded-lg cursor-pointer border border-slate-300 p-0.5">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Color del título</label>
+                                    <input type="color" id="pa_titleColor" oninput="promoAdminLive_()" class="w-full h-9 rounded-lg cursor-pointer border border-slate-300 p-0.5">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Color del subtítulo</label>
+                                    <input type="color" id="pa_subtitleColor" oninput="promoAdminLive_()" class="w-full h-9 rounded-lg cursor-pointer border border-slate-300 p-0.5">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Color del contexto</label>
+                                    <input type="color" id="pa_contextColor" oninput="promoAdminLive_()" class="w-full h-9 rounded-lg cursor-pointer border border-slate-300 p-0.5">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Fondo de los cuadros de datos</label>
+                                    <input type="color" id="pa_fieldBg" oninput="promoAdminLive_()" class="w-full h-9 rounded-lg cursor-pointer border border-slate-300 p-0.5">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Letras dentro de los cuadros</label>
+                                    <input type="color" id="pa_fieldText" oninput="promoAdminLive_()" class="w-full h-9 rounded-lg cursor-pointer border border-slate-300 p-0.5">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Texto guía dentro de los cuadros</label>
+                                    <input type="color" id="pa_fieldPlaceholder" oninput="promoAdminLive_()" class="w-full h-9 rounded-lg cursor-pointer border border-slate-300 p-0.5">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Fondo del botón</label>
+                                    <input type="color" id="pa_btnBg" oninput="promoAdminLive_()" class="w-full h-9 rounded-lg cursor-pointer border border-slate-300 p-0.5">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Texto del botón</label>
+                                    <input type="color" id="pa_btnTextColor" oninput="promoAdminLive_()" class="w-full h-9 rounded-lg cursor-pointer border border-slate-300 p-0.5">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Color de las condiciones</label>
+                                    <input type="color" id="pa_legalColor" oninput="promoAdminLive_()" class="w-full h-9 rounded-lg cursor-pointer border border-slate-300 p-0.5">
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="button" onclick="promoAdminPreview_()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2.5 rounded-xl text-xs transition-all">Ver vista previa</button>
+                                <button type="button" onclick="promoAdminSave_()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition-all">Guardar pop-up de código</button>
+                            </div>
+                        </div>
                     </div>
 
 
@@ -7129,6 +7233,10 @@ function setAdminSaveStatus(state) {
                 }
             }
 
+            if (!appliedCoupon && promoCart && promoCart.percent > 0) {
+                discount = Math.round(subtotal * promoCart.percent) / 100;
+            }
+
             const finalTotal = Math.max(0, subtotal - discount);
 
             const subtotalEl = document.getElementById('cartSubtotalPrice');
@@ -7140,11 +7248,15 @@ function setAdminSaveStatus(state) {
             if (subtotalEl) subtotalEl.innerText = `S/ ${subtotal.toFixed(2)}`;
 
             if (couponRow) {
-                if (appliedCoupon && discount > 0) {
+                if ((appliedCoupon || promoCart) && discount > 0) {
                     couponRow.style.display = 'flex';
-                    if (couponLabel) couponLabel.innerText = `Cupón (${appliedCoupon.name}):`;
+                    if (couponLabel) {
+                        couponLabel.innerText = appliedCoupon
+                            ? `Cupón (${appliedCoupon.name}):`
+                            : `Código ${promoCart.code} (${promoCart.percent}% OFF):`;
+                    }
                     if (couponAmount) couponAmount.innerText = `-S/ ${discount.toFixed(2)}`;
-                    if (couponInput && !couponInput.value.trim()) couponInput.value = appliedCoupon.name;
+                    if (couponInput && appliedCoupon && !couponInput.value.trim()) couponInput.value = appliedCoupon.name;
                 } else {
                     couponRow.style.display = 'none';
                 }
@@ -7331,71 +7443,7 @@ function setAdminSaveStatus(state) {
             document.addEventListener('touchcancel', function () { edgeSwipeState = null; });
         }
 
-        function sendWhatsAppOrder() {
-            syncCartCampaignPrices();
-            if (shoppingCart.length === 0) {
-                showToast("Tu carrito está vacío. Agrega productos antes de pedir.", "error");
-                return;
-            }
-
-            
-            const storeName = (storeData.config && storeData.config.storeTitle) || '';
-            let msg = getWaMessage('cartHeader', { tienda: storeName }) + `\n\n`;
-            let total = 0;
-            let detalle = '';
-
-            shoppingCart.forEach(item => {
-                const qty = Math.max(1, Number(item.qty) || 1);
-                const sub = Number(item.price) * qty;
-                total += sub;
-                const cartProduct = (storeData.products || []).find(product => String(product.id) === String(item.productId));
-                const cartBasePrice = Number(item.basePrice != null ? item.basePrice : item.price) || 0;
-                const campaignPricing = getFestiveCampaignPricing(cartProduct, cartBasePrice);
-
-                detalle += `*${item.productName}*\n` +
-                    `- Presentación: ${item.presentationSize} ${item.presentationUnit}\n` +
-                    `- Cantidad: ${qty}\n`;
-
-                if (campaignPricing.active) {
-                    const unitDiscount = Math.max(0, campaignPricing.regularPrice - campaignPricing.finalPrice);
-                    const totalDiscount = unitDiscount * qty;
-                    const percentText = campaignPricing.discountType === 'percent'
-                        ? ' (' + ((campaignPricing.regularPrice > 0 ? unitDiscount / campaignPricing.regularPrice * 100 : 0).toFixed(2).replace(/\.00$/, '')) + '%)'
-                        : '';
-                    detalle += `- Precio: S/ ${campaignPricing.regularPrice.toFixed(2)}\n` +
-                        `- Descuento: - S/ ${totalDiscount.toFixed(2)}${percentText}\n` +
-                        `- Total: S/ ${sub.toFixed(2)}\n\n`;
-                } else {
-                    
-                    detalle += `- Precio: S/ ${Number(item.price).toFixed(2)}\n` +
-                        `- Total: S/ ${sub.toFixed(2)}\n\n`;
-                }
-            });
-
-            msg += detalle;
-
-            const orderDiscount = getActiveCouponDiscount(total);
-            if (orderDiscount > 0) {
-                msg += `*Precio inicial:* S/ ${total.toFixed(2)}\n`;
-                msg += `*Cupón ${appliedCoupon.name}:* -S/ ${orderDiscount.toFixed(2)}\n`;
-                total = Math.max(0, total - orderDiscount);
-            }
-
-            msg += `*Total a Pagar:* S/ ${total.toFixed(2)}\n`;
-            if (total >= Number(storeData.config.freeShipping)) {
-                msg += `*Envío:* GRATIS 🚚\n`;
-            }
-            msg += `\n` + getWaMessage('cartFooter', {
-                tienda: storeName,
-                total: total.toFixed(2),
-                detalle: detalle.trim()
-            });
-
-            const phone = storeData.config.whatsapp.replace(/\D/g, '');
-            const url = `https:/\x2fwa.me/${phone}?text=${encodeURIComponent(msg)}`;
-            window.open(url, '_blank');
-        }
-
+        
 function applyClientMode() {
     try {
         if (!(window.google && google.script && google.script.url && google.script.url.getLocation)) {
@@ -7523,6 +7571,7 @@ function applyClientMode() {
             adminBuildNav();
             const adminEntry = adminResolveEntry(tabName);
             tabName = adminEntry.tab;
+            if (tabName === 'popup') { try { promoAdminFill_(); } catch (e) {} }
             const tabs = ['dashboard', 'general', 'categories', 'families', 'products', 'productManagement', 'carousels', 'design', 'personalization', 'coupons', 'festiveCampaign', 'floating', 'popup', 'postTexts', 'landing', 'section2', 'orgblocks', 'trust', 'customerCare', 'export', 'security', 'colormap', 'searchSyn'];
 
             document.querySelectorAll('.admin-nav-btn').forEach(btn => {
@@ -9783,57 +9832,8 @@ function applyClientMode() {
                 (ok ? ' <button type="button" onclick="removeCartCoupon()" class="ml-1 underline text-slate-500 hover:text-rose-600">Quitar</button>' : '');
         }
 
-        function applyCartCoupon() {
-            var input = document.getElementById('cartCouponInput');
-            var raw = input ? input.value : '';
-
-            if (!normalizeCouponText(raw)) {
-                setCouponFeedback('Escribe el nombre de tu cupón.', false);
-                return;
-            }
-
-            var coupon = findCouponByName(raw);
-            if (!coupon) {
-                appliedCoupon = null;
-                try { localStorage.removeItem(COUPON_STORAGE_KEY); } catch (e) {}
-                setCouponFeedback('El cupón ingresado no es válido.', false);
-                updateCartUI();
-                return;
-            }
-
-            var subtotal = shoppingCart.reduce(function (sum, item) {
-                return sum + (Number(item.price) * Number(item.qty));
-            }, 0);
-
-            var check = evaluateCouponForCart(coupon, subtotal);
-            if (!check.ok) {
-                appliedCoupon = null;
-                try { localStorage.removeItem(COUPON_STORAGE_KEY); } catch (e) {}
-                setCouponFeedback(check.reason, false);
-                updateCartUI();
-                return;
-            }
-
-            appliedCoupon = { id: coupon.id, name: coupon.name };
-            try { localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify(appliedCoupon)); } catch (e) {}
-
-            if (input) input.value = coupon.name;
-            setCouponFeedback('Cupón "' + coupon.name + '" aplicado: -S/ ' + check.discount.toFixed(2), true);
-            updateCartUI();
-            showToast('Cupón aplicado: -S/ ' + check.discount.toFixed(2), 'success', { client: true });
-        }
-
-        function removeCartCoupon() {
-            var hadCoupon = !!appliedCoupon;
-            appliedCoupon = null;
-            try { localStorage.removeItem(COUPON_STORAGE_KEY); } catch (e) {}
-            var input = document.getElementById('cartCouponInput');
-            if (input) input.value = '';
-            setCouponFeedback('', true);
-            updateCartUI();
-            if (hadCoupon) showToast('Cupón retirado del pedido.', 'info', { client: true });
-        }
-
+        
+        
         
 
         function restoreSavedCouponOnce() {
@@ -15656,6 +15656,567 @@ window.addEventListener('load', function () {
     });
   }
 });
+</script>
+<style id="promoLeadCss">
+#promoLeadOverlay { display:none; position:fixed; inset:0; z-index:2147482000; background:rgba(15,23,42,.6); align-items:center; justify-content:center; padding:16px; }
+#promoLeadBox { position:relative; display:flex; width:100%; max-width:860px; max-height:92vh; background:#fff; border-radius:24px; box-shadow:0 25px 60px rgba(0,0,0,.35); overflow:hidden; font-family:Inter,system-ui,sans-serif; }
+#promoLeadImgWrap { flex:0 0 46%; background:#f5f5f4; align-items:center; justify-content:center; }
+#promoLeadImg { width:100%; height:100%; object-fit:cover; display:none; }
+#promoLeadPanel { flex:1 1 54%; padding:26px 26px 24px; overflow-y:auto; }
+#promoLeadClose { position:absolute; top:10px; right:10px; width:34px; height:34px; border-radius:50%; border:0; background:#fff; color:#0f172a; font-size:20px; cursor:pointer; z-index:3; }
+#promoLeadTag { font-size:11px; letter-spacing:.14em; font-weight:800; text-transform:uppercase; }
+#promoLeadTitle { font-size:34px; font-weight:900; line-height:1.05; margin-top:4px; }
+#promoLeadSub { font-size:15px; font-weight:700; margin-top:8px; }
+#promoLeadCtx { font-size:13px; margin-top:8px; line-height:1.45; }
+.promo-input { width:100%; box-sizing:border-box; padding:12px 14px; margin-bottom:10px; border:1px solid #d6d3d1; border-radius:14px; font-size:14px; }
+#promoLeadBtn, #promoCopyBtn { width:100%; padding:14px; border:0; border-radius:14px; font-weight:800; font-size:14px; cursor:pointer; }
+#promoLeadBtn:disabled { opacity:.6; cursor:default; }
+#promoLeadError { color:#fecaca; font-size:12px; font-weight:700; min-height:18px; margin-bottom:6px; }
+#promoLeadLegal { font-size:10px; margin-top:12px; line-height:1.4; }
+#promoCodeBox { border:2px dashed #ffffff; border-radius:16px; padding:16px; text-align:center; margin-bottom:12px; }
+#promoCodeText { font-size:30px; font-weight:900; letter-spacing:.18em; color:#ffffff; }
+#promoDoneText { font-size:13px; margin-bottom:12px; line-height:1.45; }
+@media (max-width: 640px) {
+  #promoLeadBox { flex-direction:column; overflow-y:auto; }
+  #promoLeadImgWrap { flex:0 0 auto; height:170px; }
+  #promoLeadPanel { overflow-y:visible; }
+}
+</style>
+
+<!-- PROMO CÓDIGO ÚNICO (se edita en Admin > Pop-up > Pop-up de código único) -->
+<div id="promoLeadOverlay" data-preview="0" onclick="if(event.target===this) promoClose_()">
+    <div id="promoLeadBox">
+        <button type="button" id="promoLeadClose" onclick="promoClose_()" aria-label="Cerrar">&times;</button>
+        <div id="promoLeadImgWrap"><img id="promoLeadImg" alt=""></div>
+        <div id="promoLeadPanel">
+            <div id="promoLeadTag"></div>
+            <div id="promoLeadTitle"></div>
+            <div id="promoLeadSub"></div>
+            <div id="promoLeadCtx"></div>
+            <div id="promoFormView" style="margin-top:18px;">
+                <input id="promoName" class="promo-input" type="text" maxlength="60">
+                <input id="promoWa" class="promo-input" type="tel" maxlength="15">
+                <input id="promoEmail" class="promo-input" type="email" maxlength="120">
+                <div id="promoLeadError"></div>
+                <button type="button" id="promoLeadBtn" onclick="promoSubmit_()"></button>
+                <p id="promoLeadLegal"></p>
+            </div>
+            <div id="promoDoneView" style="display:none;margin-top:18px;">
+                <div id="promoDoneText"></div>
+                <div id="promoCodeBox"><div id="promoCodeText">BF00000</div></div>
+                <button type="button" id="promoCopyBtn" onclick="promoCopy_()">Copiar código</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script id="promoScript">
+var promoStatus = null;
+var promoCart = null;
+var promoAdminImageUrl = '';
+var PROMO_LEAD_KEY = 'BF_PROMO_LEAD_V1';
+var PROMO_CODE_KEY = 'BF_PROMO_CODE_V1';
+
+var PROMO_DEFAULTS = {
+    tag: 'PROMOCIÓN',
+    title: '',
+    subtitle: 'En toda la web.',
+    context: 'Déjanos tus datos y recibe tu código personal.',
+    legal: 'Al enviar aceptas recibir ofertas por correo y WhatsApp.',
+    btnLabel: 'Quiero mi código',
+    phName: 'Tu nombre',
+    phWa: 'WhatsApp (opcional)',
+    phEmail: 'Tu correo',
+    successText: 'Pégalo en el campo "¿Tienes código?" de tu carrito. Es de un solo uso. También te lo enviamos a tu correo.',
+    bgColor: '#064e3b',
+    tagColor: '#fbbf24',
+    titleColor: '#ffffff',
+    subtitleColor: '#ffffff',
+    contextColor: '#e7e5e4',
+    fieldBg: '#ffffff',
+    fieldText: '#0f172a',
+    fieldPlaceholder: '#94a3b8',
+    btnBg: '#f59e0b',
+    btnTextColor: '#064e3b',
+    legalColor: '#a8a29e'
+};
+
+var PROMO_FIELDS = ['percent', 'tag', 'title', 'subtitle', 'context', 'legal', 'btnLabel', 'phName', 'phWa', 'phEmail', 'successText',
+    'bgColor', 'tagColor', 'titleColor', 'subtitleColor', 'contextColor', 'fieldBg', 'fieldText', 'fieldPlaceholder',
+    'btnBg', 'btnTextColor', 'legalColor'];
+
+function promoClearLocal_() { try { localStorage.removeItem(PROMO_CODE_KEY); } catch (e) {} }
+
+function promoApplyDesign_(src, percent) {
+    var d = Object.assign({}, PROMO_DEFAULTS);
+    Object.keys(src || {}).forEach(function (k) {
+        if (src[k] !== '' && src[k] !== null && src[k] !== undefined) d[k] = src[k];
+    });
+
+    function el(id) { return document.getElementById(id); }
+    function setT(id, t) { var e = el(id); if (e) e.innerText = t; }
+    function setS(id, prop, v) { var e = el(id); if (e) e.style[prop] = v; }
+
+    setT('promoLeadTag', d.tag);
+    setT('promoLeadTitle', d.title || ((percent || 0) + '% OFF'));
+    setT('promoLeadSub', d.subtitle);
+    setT('promoLeadCtx', d.context);
+    setT('promoLeadLegal', d.legal);
+    setT('promoLeadBtn', d.btnLabel);
+    setT('promoDoneText', d.successText);
+    if (el('promoName')) el('promoName').placeholder = d.phName;
+    if (el('promoWa')) el('promoWa').placeholder = d.phWa;
+    if (el('promoEmail')) el('promoEmail').placeholder = d.phEmail;
+
+    var img = el('promoLeadImg');
+    var wrap = el('promoLeadImgWrap');
+    if (d.imageUrl) {
+        if (img) { img.src = d.imageUrl; img.style.display = 'block'; }
+        if (wrap) wrap.style.display = 'flex';
+    } else {
+        if (img) { img.removeAttribute('src'); img.style.display = 'none'; }
+        if (wrap) wrap.style.display = 'none';
+    }
+
+    setS('promoLeadPanel', 'background', d.bgColor);
+    setS('promoLeadTag', 'color', d.tagColor);
+    setS('promoLeadTitle', 'color', d.titleColor);
+    setS('promoLeadSub', 'color', d.subtitleColor);
+    setS('promoLeadCtx', 'color', d.contextColor);
+    setS('promoLeadLegal', 'color', d.legalColor);
+    setS('promoDoneText', 'color', d.contextColor);
+    ['promoName', 'promoWa', 'promoEmail'].forEach(function (id) {
+        setS(id, 'background', d.fieldBg);
+        setS(id, 'color', d.fieldText);
+    });
+    setS('promoLeadBtn', 'background', d.btnBg);
+    setS('promoLeadBtn', 'color', d.btnTextColor);
+    setS('promoCopyBtn', 'background', d.btnBg);
+    setS('promoCopyBtn', 'color', d.btnTextColor);
+
+    var st = el('promoLeadStyleDyn');
+    if (!st) {
+        st = document.createElement('style');
+        st.id = 'promoLeadStyleDyn';
+        document.head.appendChild(st);
+    }
+    st.textContent = '#promoLeadBox .promo-input::placeholder { color: ' + d.fieldPlaceholder + '; opacity: 1; }';
+}
+
+
+function promoAdminInjectPercent_() {
+    var block = document.getElementById('promoAdminBlock');
+    if (!block || document.getElementById('pa_percent')) return;
+    var wrap = document.createElement('div');
+    wrap.innerHTML = '<label class="block text-[11px] font-bold text-slate-600 mb-1">Descuento (%) de la promoción</label>' +
+        '<input type="number" min="1" max="99" step="1" id="pa_percent" oninput="promoAdminLive_()" ' +
+        'class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs">';
+    block.insertBefore(wrap, block.children[2] || null);
+}
+
+function promoInit_() {
+    if (!(window.google && google.script && google.script.run)) return;
+    promoAdminInjectPercent_();
+
+    google.script.run
+        .withSuccessHandler(function (st) {
+            promoStatus = st;
+            if (!st) return;
+            promoApplyDesign_((st.design || {}), st.percent);
+            if (!st.active) return;
+            if (localStorage.getItem(PROMO_LEAD_KEY)) return;
+            setTimeout(function () { promoOpenLead_(); }, 800);
+        })
+        .getPromoStatus();
+
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(PROMO_CODE_KEY)); } catch (e) { saved = null; }
+    if (saved && saved.code) {
+        google.script.run
+            .withSuccessHandler(function (res) {
+                if (res && res.ok) { promoCart = { code: res.code, percent: res.percent }; }
+                else { promoCart = null; promoClearLocal_(); }
+                updateCartUI();
+            })
+            .validatePromoCode(saved.code);
+    }
+}
+
+function promoOpenLead_() {
+    var ov = document.getElementById('promoLeadOverlay');
+    if (!ov) return;
+    ov.dataset.preview = '0';
+    var store = document.getElementById('storePopupOverlay');
+    if (store && store.style.display === 'flex') {
+        store.dataset.promoHid = '1';
+        store.style.display = 'none';
+    }
+    document.getElementById('promoFormView').style.display = 'block';
+    document.getElementById('promoDoneView').style.display = 'none';
+    document.getElementById('promoLeadError').innerText = '';
+    ov.style.display = 'flex';
+}
+
+function promoClose_() {
+    var ov = document.getElementById('promoLeadOverlay');
+    if (ov) ov.style.display = 'none';
+    var store = document.getElementById('storePopupOverlay');
+    if (store && store.dataset.promoHid === '1') {
+        store.dataset.promoHid = '';
+        store.style.display = 'flex';
+    }
+}
+
+function promoSubmit_() {
+    var err = document.getElementById('promoLeadError');
+    var btn = document.getElementById('promoLeadBtn');
+    var ov = document.getElementById('promoLeadOverlay');
+    err.innerText = '';
+
+    if (ov && ov.dataset.preview === '1') {
+        err.innerText = 'Vista previa: aquí no se genera código.';
+        return;
+    }
+
+    var name = document.getElementById('promoName').value.trim();
+    var wa = document.getElementById('promoWa').value.trim();
+    var email = document.getElementById('promoEmail').value.trim();
+
+    if (name.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        err.innerText = 'Escribe tu nombre y un correo válido.';
+        return;
+    }
+
+    var label = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = 'Enviando...';
+
+    google.script.run
+        .withSuccessHandler(function (res) {
+            btn.disabled = false;
+            btn.innerText = label;
+            if (!res || !res.ok) {
+                err.innerText = (res && res.reason) || 'No se pudo generar tu código.';
+                return;
+            }
+            try { localStorage.setItem(PROMO_LEAD_KEY, '1'); } catch (e) {}
+            document.getElementById('promoCodeText').innerText = res.code;
+            document.getElementById('promoFormView').style.display = 'none';
+            document.getElementById('promoDoneView').style.display = 'block';
+        })
+        .withFailureHandler(function () {
+            btn.disabled = false;
+            btn.innerText = label;
+            err.innerText = 'Error de conexión. Intenta de nuevo.';
+        })
+        .savePromoLead({ name: name, whatsapp: wa, email: email });
+}
+
+function promoCopy_() {
+    var code = document.getElementById('promoCodeText').innerText.trim();
+    var btn = document.getElementById('promoCopyBtn');
+    var ok = function () {
+        btn.innerText = '¡Copiado!';
+        setTimeout(function () { btn.innerText = 'Copiar código'; }, 1600);
+    };
+    var fallback = function () {
+        var t = document.createElement('textarea');
+        t.value = code;
+        t.setAttribute('readonly', '');
+        t.style.position = 'fixed';
+        t.style.opacity = '0';
+        document.body.appendChild(t);
+        t.select();
+        try { document.execCommand('copy'); ok(); }
+        catch (e) { showToast('Copia tu código: ' + code, 'info'); }
+        document.body.removeChild(t);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(ok, fallback);
+    } else {
+        fallback();
+    }
+}
+
+function promoApplyFromCart_(raw) {
+    var code = String(raw || '').trim().toUpperCase();
+    setCouponFeedback('Verificando código...', true);
+    if (!(window.google && google.script && google.script.run)) {
+        setCouponFeedback('No se pudo verificar el código.', false);
+        return;
+    }
+    google.script.run
+        .withSuccessHandler(function (res) {
+            if (!res || !res.ok) {
+                promoCart = null;
+                promoClearLocal_();
+                setCouponFeedback((res && res.reason) || 'El código no es válido.', false);
+                updateCartUI();
+                return;
+            }
+            appliedCoupon = null;
+            try { localStorage.removeItem(COUPON_STORAGE_KEY); } catch (e) {}
+            promoCart = { code: res.code, percent: res.percent };
+            try { localStorage.setItem(PROMO_CODE_KEY, JSON.stringify(promoCart)); } catch (e) {}
+            var input = document.getElementById('cartCouponInput');
+            if (input) input.value = res.code;
+            setCouponFeedback('Código ' + res.code + ' aplicado: ' + res.percent + '% OFF', true);
+            updateCartUI();
+            showToast('Código aplicado: ' + res.percent + '% OFF', 'success', { client: true });
+        })
+        .withFailureHandler(function () {
+            setCouponFeedback('No se pudo verificar el código. Intenta de nuevo.', false);
+        })
+        .validatePromoCode(code);
+}
+
+function registerOrderInSheet_(payload) {
+    try {
+        if (window.google && google.script && google.script.run) {
+            google.script.run
+                .withFailureHandler(function (e) { console.error('Pedido no registrado:', e); })
+                .registerPromoOrder(payload);
+        }
+    } catch (e) { console.error(e); }
+}
+
+/* ---------- ADMIN: editor del pop-up de código (pestaña Pop-up) ---------- */
+function promoAdminRead_() {
+    var d = {};
+    PROMO_FIELDS.forEach(function (k) {
+        var e = document.getElementById('pa_' + k);
+        if (e) d[k] = e.value;
+    });
+    d.imageUrl = promoAdminImageUrl;
+    return d;
+}
+
+function promoAdminRefreshImg_() {
+    var img = document.getElementById('pa_imgPreview');
+    if (!img) return;
+    if (promoAdminImageUrl) { img.src = promoAdminImageUrl; img.style.display = 'block'; }
+    else { img.removeAttribute('src'); img.style.display = 'none'; }
+}
+
+function promoAdminFill_() {
+    var sd = (typeof storeData !== 'undefined' && storeData) ? storeData : {};
+    var saved = sd.promoPopup || {};
+    var d = Object.assign({}, PROMO_DEFAULTS, saved);
+    PROMO_FIELDS.forEach(function (k) {
+        var e = document.getElementById('pa_' + k);
+        if (e) e.value = (d[k] !== undefined && d[k] !== null) ? d[k] : '';
+    });
+    var pe = document.getElementById('pa_percent');
+    if (pe && !(saved.percent)) pe.value = promoStatus ? promoStatus.percent : '';
+    promoAdminImageUrl = saved.imageUrl || '';
+    promoAdminRefreshImg_();
+}
+
+function promoAdminLive_() {
+    var pct = promoStatus ? promoStatus.percent : 0;
+    promoApplyDesign_(promoAdminRead_(), pct);
+}
+
+function promoAdminPreview_() {
+    promoAdminLive_();
+    var ov = document.getElementById('promoLeadOverlay');
+    if (!ov) return;
+    document.getElementById('promoFormView').style.display = 'block';
+    document.getElementById('promoDoneView').style.display = 'none';
+    document.getElementById('promoLeadError').innerText = '';
+    ov.dataset.preview = '1';
+    ov.style.display = 'flex';
+}
+
+function promoAdminSave_() {
+    var d = promoAdminRead_();
+    var pct = Number(d.percent);
+    if (!(pct >= 1 && pct <= 99)) {
+        showToast('El descuento debe ser un número entre 1 y 99.', 'error');
+        return;
+    }
+    d.percent = String(Math.round(pct));
+    storeData.promoPopup = d;
+    saveStoreData();
+    showToast('Pop-up de código guardado. Se verá en la web al recargar.', 'success');
+}
+
+function promoAdminUpload_(event) {
+    var file = event.target.files[0];
+    if (!file) return;
+    if (!(window.google && google.script && google.script.run)) {
+        showToast('La subida requiere ejecutar la tienda desde Apps Script.', 'error');
+        return;
+    }
+    showToast('Subiendo imagen del pop-up...', 'info');
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        google.script.run
+            .withSuccessHandler(function (url) {
+                promoAdminImageUrl = url;
+                promoAdminRefreshImg_();
+                promoAdminLive_();
+                showToast('Imagen subida. Recuerda guardar el pop-up.', 'success');
+            })
+            .withFailureHandler(function (err) {
+                console.error(err);
+                showToast('Error al subir la imagen del pop-up.', 'error');
+            })
+            .uploadImage(e.target.result, file.name, window.adminToken);
+    };
+    readImageForUpload(file, reader);
+}
+
+window.addEventListener('load', promoInit_);
+
+setInterval(function () {
+    var ov = document.getElementById('promoLeadOverlay');
+    var store = document.getElementById('storePopupOverlay');
+    if (ov && store && ov.style.display === 'flex' && store.style.display === 'flex') {
+        store.dataset.promoHid = '1';
+        store.style.display = 'none';
+    }
+}, 200);
+/* ------------------------- PASO 3 (reemplaza applyCartCoupon) ------------------------- */
+function applyCartCoupon() {
+    var input = document.getElementById('cartCouponInput');
+    var raw = input ? String(input.value || '').trim() : '';
+
+    if (!normalizeCouponText(raw)) {
+        setCouponFeedback('Escribe tu cupón o código.', false);
+        return;
+    }
+
+    var coupon = findCouponByName(raw);
+    if (!coupon) {
+        // No es un cupón con nombre: se verifica como código único.
+        promoApplyFromCart_(raw);
+        return;
+    }
+
+    promoCart = null;
+    promoClearLocal_();
+
+    var subtotal = shoppingCart.reduce(function (sum, item) {
+        return sum + (Number(item.price) * Number(item.qty));
+    }, 0);
+
+    var check = evaluateCouponForCart(coupon, subtotal);
+    if (!check.ok) {
+        appliedCoupon = null;
+        try { localStorage.removeItem(COUPON_STORAGE_KEY); } catch (e) {}
+        setCouponFeedback(check.reason, false);
+        updateCartUI();
+        return;
+    }
+
+    appliedCoupon = { id: coupon.id, name: coupon.name };
+    try { localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify(appliedCoupon)); } catch (e) {}
+
+    if (input) input.value = coupon.name;
+    setCouponFeedback('Cupón "' + coupon.name + '" aplicado: -S/ ' + check.discount.toFixed(2), true);
+    updateCartUI();
+    showToast('Cupón aplicado: -S/ ' + check.discount.toFixed(2), 'success', { client: true });
+}
+
+
+/* ------------------------- PASO 4 (reemplaza removeCartCoupon) ------------------------- */
+function removeCartCoupon() {
+    var hadCoupon = !!appliedCoupon || !!promoCart;
+    appliedCoupon = null;
+    promoCart = null;
+    promoClearLocal_();
+    try { localStorage.removeItem(COUPON_STORAGE_KEY); } catch (e) {}
+    var input = document.getElementById('cartCouponInput');
+    if (input) input.value = '';
+    setCouponFeedback('', true);
+    updateCartUI();
+    if (hadCoupon) showToast('Descuento retirado del pedido.', 'info', { client: true });
+}
+
+
+/* ------------------------- PASO 5 (reemplaza sendWhatsAppOrder) ------------------------- */
+function sendWhatsAppOrder() {
+    syncCartCampaignPrices();
+    if (shoppingCart.length === 0) {
+        showToast("Tu carrito está vacío. Agrega productos antes de pedir.", "error");
+        return;
+    }
+
+    const storeName = (storeData.config && storeData.config.storeTitle) || '';
+    let msg = getWaMessage('cartHeader', { tienda: storeName }) + `\n\n`;
+    let total = 0;
+    let detalle = '';
+
+    shoppingCart.forEach(item => {
+        const qty = Math.max(1, Number(item.qty) || 1);
+        const sub = Number(item.price) * qty;
+        total += sub;
+        const cartProduct = (storeData.products || []).find(product => String(product.id) === String(item.productId));
+        const cartBasePrice = Number(item.basePrice != null ? item.basePrice : item.price) || 0;
+        const campaignPricing = getFestiveCampaignPricing(cartProduct, cartBasePrice);
+
+        detalle += `*${item.productName}*\n` +
+            `- Presentación: ${item.presentationSize} ${item.presentationUnit}\n` +
+            `- Cantidad: ${qty}\n`;
+
+        if (campaignPricing.active) {
+            const unitDiscount = Math.max(0, campaignPricing.regularPrice - campaignPricing.finalPrice);
+            const totalDiscount = unitDiscount * qty;
+            const percentText = campaignPricing.discountType === 'percent'
+                ? ' (' + ((campaignPricing.regularPrice > 0 ? unitDiscount / campaignPricing.regularPrice * 100 : 0).toFixed(2).replace(/\.00$/, '')) + '%)'
+                : '';
+            detalle += `- Precio: S/ ${campaignPricing.regularPrice.toFixed(2)}\n` +
+                `- Descuento: - S/ ${totalDiscount.toFixed(2)}${percentText}\n` +
+                `- Total: S/ ${sub.toFixed(2)}\n\n`;
+        } else {
+            detalle += `- Precio: S/ ${Number(item.price).toFixed(2)}\n` +
+                `- Total: S/ ${sub.toFixed(2)}\n\n`;
+        }
+    });
+
+    msg += detalle;
+
+    const subtotalOrden = total;
+    const orderDiscount = getActiveCouponDiscount(total);
+    const promoPct = (!appliedCoupon && promoCart) ? (Number(promoCart.percent) || 0) : 0;
+    const promoDiscount = promoPct > 0 ? Math.round(total * promoPct) / 100 : 0;
+
+    if (orderDiscount > 0) {
+        msg += `*Precio inicial:* S/ ${total.toFixed(2)}\n`;
+        msg += `*Cupón ${appliedCoupon.name}:* -S/ ${orderDiscount.toFixed(2)}\n`;
+        total = Math.max(0, total - orderDiscount);
+    } else if (promoDiscount > 0) {
+        msg += `*Precio inicial:* S/ ${total.toFixed(2)}\n`;
+        msg += `*Código ${promoCart.code} (${promoPct}% OFF):* -S/ ${promoDiscount.toFixed(2)}\n`;
+        total = Math.max(0, total - promoDiscount);
+    }
+
+    msg += `*Total a Pagar:* S/ ${total.toFixed(2)}\n`;
+    if (total >= Number(storeData.config.freeShipping)) {
+        msg += `*Envío:* GRATIS 🚚\n`;
+    }
+    msg += `\n` + getWaMessage('cartFooter', {
+        tienda: storeName,
+        total: total.toFixed(2),
+        detalle: detalle.trim()
+    });
+
+    // Todos los pedidos se registran en el Sheets de promociones.
+    registerOrderInSheet_({
+        subtotal: subtotalOrden,
+        detalle: detalle.trim(),
+        code: promoPct > 0 ? promoCart.code : ''
+    });
+
+    const phone = storeData.config.whatsapp.replace(/\D/g, '');
+    const url = `https:/\x2fwa.me/${phone}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+}
+
+
+
 </script>
 </body>
 </html>
